@@ -41,6 +41,13 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
+onMounted(() => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
+  if (isLoggedIn !== 'true') {
+    router.push('/login')
+  }
+})
+
 const games = ref([
   { name: 'R.E.P.O', slug: "repo", description: 'Sigma Sigma Boy' },
   { name: 'GAME 2', slug: "#", description: 'GAME 2 DESC' },

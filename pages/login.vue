@@ -52,13 +52,19 @@ const showLogin = ref(false)
 const router = useRouter()
 
 onMounted(() => {
-  showLogin.value = true // trigger the transition on mount
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
+  if (isLoggedIn === 'true') {
+    router.push('/')
+  } else {
+    showLogin.value = true // trigger the transition on mount
+  }
 })
 
 const handleLogin = async () => {
   error.value = ''
 
   if (username.value === 'admin' && password.value === 'password') {
+    localStorage.setItem('isLoggedIn', 'true')
     await router.push('/')
   } else {
     error.value = 'Invalid username or password'
