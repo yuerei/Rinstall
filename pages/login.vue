@@ -7,35 +7,62 @@
         <form class="space-y-4" @submit.prevent="handleLogin">
           <div>
             <label class="block text-sm font-medium text-gray-300">Username</label>
-            <!-- eslint-disable-next-line vue/html-self-closing -->
             <input
               v-model="username"
               type="text"
               required
+              aria-label="Username"
+              placeholder="Enter your username"
               class="mt-1 w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            >
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-300">Password</label>
-            <!-- eslint-disable-next-line vue/html-self-closing -->
             <input
               v-model="password"
               type="password"
               required
+              aria-label="Password"
+              placeholder="Enter your password"
               class="mt-1 w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            >
           </div>
 
           <button
+            :disabled="loading"
+            aria-label="Submit login form"
             type="submit"
-            class="w-full bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 rounded-lg transition"
+            class="w-full bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 rounded-lg transition disabled:opacity-50 flex items-center justify-center space-x-2"
           >
-            Login
+            <svg
+              v-if="loading"
+              class="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              />
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+              />
+            </svg>
+            <span>{{ loading ? 'Logging in...' : 'Login' }}</span>
           </button>
         </form>
 
-        <p v-if="error" class="text-red-400 text-center mt-4">{{ error }}</p>
+        <p v-if="error" class="text-red-400 text-center mt-4">
+          {{ errorMessages[error] }}
+        </p>
       </div>
     </Transition>
   </div>
@@ -47,8 +74,10 @@ import { useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
-const error = ref('')
+type LoginError = 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | ''
+const error = ref<LoginError>('')
 const showLogin = ref(false)
+const loading = ref(false)
 const router = useRouter()
 
 onMounted(() => {
@@ -56,41 +85,34 @@ onMounted(() => {
   if (isLoggedIn === 'true') {
     router.push('/')
   } else {
-    showLogin.value = true // trigger the transition on mount
+    showLogin.value = true
   }
 })
 
+function validateCredentials(username: string, password: string): boolean {
+  return username === 'admin' && password === 'password'
+}
+
 const handleLogin = async () => {
   error.value = ''
+  loading.value = true
 
-  if (username.value === 'admin' && password.value === 'password') {
-    localStorage.setItem('isLoggedIn', 'true')
-    await router.push('/')
-  } else {
-    error.value = 'Invalid username or password'
+  // await new Promise((resolve) => setTimeout(resolve, 2000))
+
+  try {
+    if (validateCredentials(username.value, password.value)) {
+      localStorage.setItem('isLoggedIn', 'true')
+      await router.push('/')
+    } else {
+      error.value = 'INVALID_CREDENTIALS'
+    }
+  } finally {
+    loading.value = false
   }
 }
-</script>
 
-<style scoped>
-.fade-scale-enter-active,
-.fade-scale-leave-active {
-  transition: all 0.5s ease;
+const errorMessages = {
+  INVALID_CREDENTIALS: 'Invalid username or password.',
+  NETWORK_ERROR: 'Network error. Please try again.',
 }
-.fade-scale-enter-from {
-  opacity: 0;
-  transform: scale(0.95);
-}
-.fade-scale-enter-to {
-  opacity: 1;
-  transform: scale(1);
-}
-.fade-scale-leave-from {
-  opacity: 1;
-  transform: scale(1);
-}
-.fade-scale-leave-to {
-  opacity: 0;
-  transform: scale(0.95);
-}
-</style>
+</script>

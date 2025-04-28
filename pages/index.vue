@@ -1,19 +1,17 @@
 <template>
-  <div class="min-h-screen bg-gray-900 flex p-8 gap-8 text-white">
-    
+  <div class="min-h-screen bg-gray-900 flex flex-col md:flex-row p-8 gap-8 text-white">
     <!-- Left Sidebar -->
-    <div class="flex flex-col gap-6 w-64">
-      <div
-        v-for="(game, index) in games"
-        :key="index"
-        :class="[
-          'p-6 text-center rounded-lg cursor-pointer transition border-2',
-          selectedGame === index ? 'border-fuchsia-400 bg-gray-800' : 'border-gray-700 bg-gray-800'
-        ]"
-        @click="selectGame(index)"
-      >
+    <div class="flex flex-col gap-6 w-full md:w-64 xl:w-1/5">
+      <button
+          v-for="(game, index) in games"
+          :key="index"
+          :class="selectedGame === index ? 'border-fuchsia-400 bg-gray-800 transform scale-105' : 'border-gray-700 bg-gray-800'"
+          class="p-6 text-center rounded-lg cursor-pointer transition border-2 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400"
+          :aria-pressed="selectedGame === index"
+          @click="selectGame(index)"
+        >
         {{ game.name }}
-      </div>
+    </button>
     </div>
 
     <!-- Right Content -->
@@ -36,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -61,31 +59,8 @@ const selectGame = (index: number) => {
   selectedGame.value = index
 }
 
-const goToGame = (slug: string) => {
-  if (slug === "#") return
-  else router.push(`/game/${slug}`)
+const goToGame = (slug?: string) => {
+  if (!slug) return
+  router.push(`/game/${slug}`)
 }
 </script>
-
-<style scoped>
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.4s ease;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-.fade-slide-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.fade-slide-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>

@@ -5,6 +5,8 @@
 </template>
 
 <style>
+@import '@/assets/css/animations.css';
+
 html, body {
   background-color: #111827; /* Tailwind's bg-gray-900 */
   margin: 0;
