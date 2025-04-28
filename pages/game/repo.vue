@@ -13,12 +13,12 @@
         <button
           v-for="mod in mods"
           :key="mod.name"
-          @click="toggleMod(mod.name)"
           class="border-2 px-6 py-4 rounded-xl text-white transition duration-300"
           :class="{
             'border-fuchsia-500': !selectedMods.includes(mod.name),
             'border-fuchsia-300 bg-fuchsia-700': selectedMods.includes(mod.name),
           }"
+          @click="toggleMod(mod.name)"
         >
         {{ mod.name }}
         </button>
@@ -34,7 +34,7 @@
         >
           {{ downloading ? 'Downloading...' : 'Download Selected Mods' }}
         </button>
-        <div class="text-white mt-8 text-xl">
+        <div class="text-white mt-8 text-xl max-w-40">
           Selected Mods: {{ selectedMods.length > 0 ? selectedMods.join(', ') : 'None' }}
         </div>
       </div>
@@ -43,8 +43,8 @@
     <!-- Bottom Select Directory -->
     <div class="flex items-center gap-4 mt-12">
       <button
-        @click="selectDirectory"
         class="px-6 py-2 border-2 border-fuchsia-400 rounded-lg hover:bg-fuchsia-400 hover:text-black transition"
+        @click="selectDirectory"
       >
         Select Dir
       </button>
@@ -60,14 +60,15 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { load } from '@tauri-apps/plugin-store';
 import { download } from '@tauri-apps/plugin-upload';
 import { exists, mkdir } from '@tauri-apps/plugin-fs';
+import { invoke } from '@tauri-apps/api/core';
 
 const selectedDirectory = ref('Loading...')
 const selectedMods = ref<string[]>([])
 const downloading = ref(false)
 
 const mods = [
-  { name: 'Mod 1', url: 'https://drive.google.com/uc?export=download&id=1tDHVSSMJ0fvU1aQw_O4edPpNDQ7sGtmf' },
-  { name: 'Mod 2', url: 'https://cdn.modrinth.com/data/AANobbMI/versions/DA250htH/sodium-fabric-0.6.13%2Bmc1.21.5.jar' },
+  { name: 'BepInEx', url: 'https://drive.google.com/uc?export=download&id=1tDHVSSMJ0fvU1aQw_O4edPpNDQ7sGtmf' },
+  { name: 'MoreHead', url: 'https://thunderstore.io/package/download/YMC_MHZ/MoreHead/1.3.11/' },
   { name: 'Mod 3', url: 'https://example.com/mod3.zip' },
   { name: 'Mod 4', url: 'https://example.com/mod4.zip' },
   { name: 'Mod 5', url: 'https://example.com/mod5.zip' },
@@ -114,16 +115,25 @@ async function downloadSelectedMods() {
       if (!mod) continue
 
       const fileDir = `${selectedDirectory.value}\\_temp`
-      if (!(await exists(fileDir))) {
-        await mkdir(fileDir)
-      }
-      const filePath = `${selectedDirectory.value}/_temp/${mod.name}.zip`
-      console.log('Downloading', mod.url, 'to', filePath)
+      const targetDir = `${selectedDirectory.value}\\_temp_target`
+      if (!(await exists(fileDir))) await mkdir(fileDir)
+      if (!(await exists(targetDir))) await mkdir(targetDir)
+      
+      const tempFilePath = `${selectedDirectory.value}/_temp/${mod.name}.zip`
+      console.log('Downloading', mod.url, 'to', tempFilePath)
 
-      await download(mod.url,
-        filePath, ({ progress, total }) =>
+      await download(mod.url, tempFilePath, ({ progress, total }) =>
         console.log(`Downloaded ${progress} of ${total} bytes`)
       )
+
+      const tempExtractFolder = `${targetDir}/${mod.name}`;
+      
+      let targetExtractFolder;
+      if (modName === 'BepInEx') targetExtractFolder = `${selectedDirectory.value}`;
+      else targetExtractFolder = `${selectedDirectory.value}/BepInEx/plugins/`;
+
+      await extract(tempFilePath, tempExtractFolder, targetExtractFolder);
+      console.log(`Extracted ${mod.name} to ${targetExtractFolder}`);
     }
     alert('Download complete!')
   } catch (error) {
@@ -131,6 +141,15 @@ async function downloadSelectedMods() {
     alert('Failed to download mods!')
   } finally {
     downloading.value = false
+  }
+}
+
+async function extract(zipPath: string, tempPath: string, outputPath: string) {
+  try {
+    await invoke('unzip_file', { zipPath, tempPath, outputPath })
+    console.log('Extraction complete!')
+  } catch (error) {
+    console.error('Extraction error:', error)
   }
 }
 </script>
