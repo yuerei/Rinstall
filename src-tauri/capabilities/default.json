@@ -6,6 +6,32 @@
     "main"
   ],
   "permissions": [
-    "core:default"
+    "core:default",
+    "dialog:default",
+    "store:default",
+    "fs:default",
+    "fs:read-all",
+    "fs:write-all",
+    "fs:allow-rename",
+    "fs:allow-mkdir",
+    "fs:allow-exists",
+    "fs:allow-watch",
+    "fs:read-dirs",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        "**/*"
+      ]
+    },
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "**"
+        }
+      ]
+    },
+    "upload:allow-download",
+    "http:default"
   ]
 }

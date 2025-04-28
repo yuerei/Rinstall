@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "rinstall",
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,11 +7,17 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.3.0",
     "@nuxt/ui": "^3.1.0",
+    "@tauri-apps/plugin-dialog": "^2.2.1",
+    "@tauri-apps/plugin-fs": "^2.2.1",
+    "@tauri-apps/plugin-http": "^2.4.3",
+    "@tauri-apps/plugin-store": "^2.2.0",
+    "@tauri-apps/plugin-upload": "^2.2.1",
     "eslint": "^9.25.1",
     "nuxt": "^3.16.2",
     "typescript": "^5.8.3",
