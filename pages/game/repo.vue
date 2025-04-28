@@ -257,17 +257,11 @@ async function downloadSelectedMods() {
 
   downloading.value = true;
   downloadProgress.value = 0;
-  let fakeProgress = 0;
-  let intervalId: ReturnType<typeof setInterval> | null = null;
 
   try {
-    // Start fake smooth progress
-    intervalId = setInterval(() => {
-      if (downloadProgress.value < 90) {
-        fakeProgress += Math.random() * 3; // Increase slowly
-        downloadProgress.value = Math.min(90, Math.floor(fakeProgress)); // <--- Use Math.floor
-      }
-    }, 200);
+    const totalMods = selectedMods.value.length;
+    let completedMods = 0;
+
     for (const modName of selectedMods.value) {
       const mod = mods.find(m => m.name === modName)
       if (!mod) continue
@@ -291,22 +285,23 @@ async function downloadSelectedMods() {
 
       const tempExtractFolder = `${targetDir}/${mod.name}`;
       let targetExtractFolder;
-      if (modName === 'BepInEx') targetExtractFolder = `${selectedDirectory.value}`;
+      if (modName === 'BepInEx' || modName==='Faster Load') targetExtractFolder = `${selectedDirectory.value}`;
       else targetExtractFolder = `${selectedDirectory.value}/BepInEx/plugins/`;
 
       await extract(tempFilePath, tempExtractFolder, targetExtractFolder);
       console.log(`Extracted ${mod.name} to ${targetExtractFolder}`);
+
+      completedMods++;
+      downloadProgress.value = Math.floor((completedMods / totalMods) * 100);
     }
-    // Finish progress
     downloadProgress.value = 100;
-    await new Promise(resolve => setTimeout(resolve, 500)); // short delay to show 100%
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     showAlert('Download complete!')
   } catch (error) {
     console.error(error)
     showAlert('Failed to download mods!');
   } finally {
-    if (intervalId) clearInterval(intervalId);
     downloading.value = false;
     downloadProgress.value = 0;
   }

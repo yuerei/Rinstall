@@ -82,10 +82,8 @@ fn fix_plugins_structure(temp_path: &str, output_path: &str) -> Result<(), Strin
         return Err("Source directory does not exist.".into());
     }
 
-    // Ensure output dir exists
     fs::create_dir_all(output_dir).map_err(|e| e.to_string())?;
 
-    // Move each file/folder manually
     for entry in fs::read_dir(&source_dir).map_err(|e| e.to_string())? {
         let entry = entry.map_err(|e| e.to_string())?;
         let from_path = entry.path();
@@ -93,18 +91,34 @@ fn fix_plugins_structure(temp_path: &str, output_path: &str) -> Result<(), Strin
         let to_path = output_dir.join(file_name);
 
         if from_path.is_dir() {
-            if to_path.exists() {
-                fs::remove_dir_all(&to_path).map_err(|e| e.to_string())?;
-            }
-            fs::rename(&from_path, &to_path).map_err(|e| e.to_string())?;
+            // Recursively merge folders
+            copy_dir_recursively(&from_path, &to_path)?;
         } else {
-            if to_path.exists() {
-                fs::remove_file(&to_path).map_err(|e| e.to_string())?;
-            }
-            fs::rename(&from_path, &to_path).map_err(|e| e.to_string())?;
+            // Overwrite files
+            fs::copy(&from_path, &to_path).map_err(|e| e.to_string())?;
         }
     }
 
     println!("Plugins moved successfully.");
+    Ok(())
+}
+
+fn copy_dir_recursively(from: &Path, to: &Path) -> Result<(), String> {
+    if !to.exists() {
+        fs::create_dir_all(to).map_err(|e| e.to_string())?;
+    }
+
+    for entry in fs::read_dir(from).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let from_path = entry.path();
+        let to_path = to.join(entry.file_name());
+
+        if from_path.is_dir() {
+            copy_dir_recursively(&from_path, &to_path)?;
+        } else {
+            fs::copy(&from_path, &to_path).map_err(|e| e.to_string())?;
+        }
+    }
+
     Ok(())
 }
