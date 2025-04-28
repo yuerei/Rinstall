@@ -1,75 +1,35 @@
-# Nuxt Minimal Starter
+# Rinstall
+**A modern, lightweight cross-platform installer built with Nuxt and Tauri.**
+Rinstall aims to provide a simple, fast, and clean interface for managing and installing modifications across desktop platforms.
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## ✨ Features
+- Cross-platform support (Windows, macOS, Linux)
+- Lightweight Tauri backend with Nuxt 3 frontend
+- Smooth UI/UX for easy navigation
+- Future support for package management integration
 
-## Setup
-
-Make sure to install dependencies:
-
+## 🚀 Getting Started
+### Install dependencies
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+### Run development server
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+npm run tauri dev
 ```
-
-## Production
-
-Build the application for production:
-
+### Build project
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npm build
 ```
+> Note: Ensure you have pnpm installed globally.
 
-Locally preview production build:
+## 📂 Project Structure
+- `pages/`: Nuxt frontend components and routing
+- `src-tauri/`: Tauri-specific files
 
-```bash
-# npm
-npm run preview
+## 🛠 Technologies
+- [Nuxt 3](https://nuxt.com/)
+- [Tauri](https://tauri.app/)
 
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## 📜 License
+MIT
