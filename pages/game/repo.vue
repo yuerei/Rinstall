@@ -67,12 +67,12 @@ const selectedMods = ref<string[]>([])
 const downloading = ref(false)
 
 const mods = [
-  { name: 'BepInEx', url: 'https://drive.google.com/uc?export=download&id=1tDHVSSMJ0fvU1aQw_O4edPpNDQ7sGtmf' },
-  { name: 'MoreHead', url: 'https://thunderstore.io/package/download/YMC_MHZ/MoreHead/1.3.11/' },
-  { name: 'Mod 3', url: 'https://example.com/mod3.zip' },
-  { name: 'Mod 4', url: 'https://example.com/mod4.zip' },
-  { name: 'Mod 5', url: 'https://example.com/mod5.zip' },
-  { name: 'Mod 6', url: 'https://example.com/mod6.zip' },
+  { name: 'BepInEx', url: 'https://drive.google.com/uc?export=download&id=1tDHVSSMJ0fvU1aQw_O4edPpNDQ7sGtmf', tags: ['Required'] },
+  { name: 'MoreHead', url: 'https://thunderstore.io/package/download/YMC_MHZ/MoreHead/1.3.11/', tags: [] },
+  { name: 'Mod 3', url: 'https://example.com/mod3.zip', tags: [] },
+  { name: 'Mod 4', url: 'https://example.com/mod4.zip', tags: [] },
+  { name: 'Mod 5', url: 'https://example.com/mod5.zip', tags: [] },
+  { name: 'Mod 6', url: 'https://example.com/mod6.zip', tags: [] },
 ]
 
 const store = await load('.config.json', { autoSave: false });

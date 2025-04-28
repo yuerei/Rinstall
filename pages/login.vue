@@ -4,9 +4,10 @@
       <div v-if="showLogin" class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md">
         <h1 class="text-3xl font-bold mb-6 text-center text-white">Login</h1>
 
-        <form @submit.prevent="handleLogin" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="handleLogin">
           <div>
             <label class="block text-sm font-medium text-gray-300">Username</label>
+            <!-- eslint-disable-next-line vue/html-self-closing -->
             <input
               v-model="username"
               type="text"
@@ -17,6 +18,7 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-300">Password</label>
+            <!-- eslint-disable-next-line vue/html-self-closing -->
             <input
               v-model="password"
               type="password"

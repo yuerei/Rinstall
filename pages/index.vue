@@ -6,11 +6,11 @@
       <div
         v-for="(game, index) in games"
         :key="index"
-        @click="selectGame(index)"
         :class="[
           'p-6 text-center rounded-lg cursor-pointer transition border-2',
           selectedGame === index ? 'border-fuchsia-400 bg-gray-800' : 'border-gray-700 bg-gray-800'
         ]"
+        @click="selectGame(index)"
       >
         {{ game.name }}
       </div>
@@ -23,8 +23,8 @@
           <h2 class="text-2xl font-bold mb-4">{{ games[selectedGame].description }}</h2>
 
           <button
-            @click="goToGame(games[selectedGame].slug)"
             class="self-end mt-auto px-6 py-2 border-2 border-fuchsia-400 rounded-lg hover:bg-fuchsia-400 hover:text-black transition"
+            @click="goToGame(games[selectedGame].slug)"
           >
             GO
           </button>
