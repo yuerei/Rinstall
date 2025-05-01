@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white p-8 flex flex-col pb-32 overflow-x-hidden animate-fade-in">
+  <div class="min-h-screen bg-gray-900 text-white p-8 flex flex-col pb-32 overflow-y-clip overflow-x-hidden animate-fade-in">
     <!-- Back Button -->
     <button
       class="absolute top-4 left-4 w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 text-white flex items-center justify-center shadow transition-transform hover:scale-110"
@@ -390,25 +390,3 @@ const goBack = () => {
   window.history.back();
 }
 </script>
-
-<style scoped>
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1f2937; /* dark background (gray-800) */
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #d946ef; /* fuchsia-400 */
-  border-radius: 10px;
-  border: 2px solid #1f2937; /* gives padding effect */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #c026d3; /* fuchsia-600 on hover */
-}
-</style>
